@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../vstech-data"
+		},
+		{
+			"path": "csharp/ObjectDetection"
+		}
+	],
+	"settings": {}
+}

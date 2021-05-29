@@ -1,0 +1,7 @@
+seaborn
+onnx
+onnxruntime-gpu
+onnx-simplifier
+sklearn
+funcy
+argparse
