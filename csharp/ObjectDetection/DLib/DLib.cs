@@ -1,41 +1,78 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
+using System.Collections.Generic;
 using Microsoft.ML;
+using Microsoft.ML.Data;
+
 
 namespace DLib
 {
+    /// <summary>
+    /// DLModule class
+    /// </summary>
     public class DLModule
     {   
         private PredictionEngine<ImageInputData, CustomVisionPrediction> predictionEngine;
         private OutputParser outputParser;
+        private ModelConfigurator modelConfigurator;
 
+        /// <summary>
+        /// DLModule Constructor
+        /// </summary>
+        /// <param name="modelPath">Path to model file (zip file)</param>
         public DLModule(string modelPath) {
             var customVisionModel = new CustomVisionModel(modelPath);
-            var modelConfigurator = new ModelConfigurator(customVisionModel);
+            modelConfigurator = new ModelConfigurator(customVisionModel);
             
             outputParser = new OutputParser(customVisionModel);
             predictionEngine = modelConfigurator.GetMlNetPredictionEngine<CustomVisionPrediction>();
         }
         
-        public List<BoundingBox> Inspect(Bitmap image) {
-            var frame = new ImageInputData { Image = image };
-            var boxes = Inspect_(frame);
+        /// <summary>
+        /// Inspect multiple images
+        /// </summary>
+        /// <param name="images">List of multiple images (Bitmap)</param>
+        /// <returns></returns>
+        public List<List<BoundingBox>> Inspect(List<Bitmap> images) {
+            IEnumerable<ImageInputData> inputs = images.Select(image => new ImageInputData() {Image = image});
+            var boxes = Inspect_(inputs);
             return boxes;
         }
 
-        private List<BoundingBox> Inspect_(ImageInputData input) {
-            var outputs = predictionEngine.Predict(input);
-            var labels = outputs.PredictedLabels;
-            var dets = outputs.PredictedDets;
-            var boxes = outputParser.ParseOutputs(dets, labels);
+        private List<List<BoundingBox>> Inspect_(IEnumerable<ImageInputData> inputs) {
+            var outputs = modelConfigurator.BatchInference(inputs);
 
-            return boxes;
+            // Output post-processing
+            IEnumerable<float[]> dets = outputs.GetColumn<float[]>("dets");
+            IEnumerable<long[]> labels = outputs.GetColumn<long[]>("labels");
+
+            int batchSize = dets.Count();
+            List<List<BoundingBox>> batchBoxes = new List<List<BoundingBox>>();
+            
+            for(int batchId = 0; batchId < batchSize; batchId++) {
+                var boxes = outputParser.ParseOutputs(
+                    dets.ElementAt(batchId), 
+                    labels.ElementAt(batchId));
+                
+                batchBoxes.Add(boxes);
+            }
+
+            return batchBoxes;
         }
 
-        public Bitmap DrawBoundingBox(Bitmap image, IList<BoundingBox> boundingBoxes, 
+        /// <summary>
+        /// Draw boxes on bitmap image
+        /// </summary>
+        /// <param name="image">Input bitmap image</param>
+        /// <param name="boundingBoxes">Bounding boxes result from model</param>
+        /// <param name="boxColor">Box color</param>
+        /// <param name="boxThickness">Box thickness</param>
+        /// <param name="drawText">Draw box description if true</param>
+        /// <param name="fontSize">Font size of text description</param>
+        /// <returns></returns>
+        public Bitmap DrawBoundingBox(Bitmap image, List<BoundingBox> boundingBoxes, 
                                         Color boxColor, int boxThickness = 3, 
                                         bool drawText = false, int fontSize = 3)
         {

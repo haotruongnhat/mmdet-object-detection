@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
+// using System.IO.Compression;
 using System.Linq;
+using Ionic.Zip;
 
 namespace DLib
 {
@@ -37,24 +38,20 @@ namespace DLib
             labelsPath = Path.GetFullPath(Path.Combine(tmpExtractedPath, labelsName));
 
             if (!File.Exists(ModelPath) || !File.Exists(labelsPath))
-                ExtractArchive(modelPath);
+                ExtractArchive(modelPath, tmpExtractedPath);
 
             Labels = File.ReadAllLines(labelsPath);
         }
 
-        void ExtractArchive(string modelPath)
+        void ExtractArchive(string modelPath, string extractedPath)
         {
-            using (ZipArchive archive = ZipFile.OpenRead(modelPath))
+            using (ZipFile archive = new ZipFile(modelPath))
             {
-                var modelEntry = archive.Entries.FirstOrDefault(e => e.Name.Equals(modelName, StringComparison.OrdinalIgnoreCase))
-                    ?? throw new FormatException("The exported .zip archive is missing the model.onnx file");
+                //https://passwordsgenerator.net/sha256-hash-generator/ - SHA256: haotruong95
+                archive.Password = "50834B4DD468EB59781986643E1FAF7A053B97D69C8DDBE26ED4DC545872008F" ; 
+                archive.Encryption = EncryptionAlgorithm.PkzipWeak ; // the default: you might need to select the proper value here
 
-                modelEntry.ExtractToFile(ModelPath);
-
-                var labelsEntry = archive.Entries.FirstOrDefault(e => e.Name.Equals(labelsName, StringComparison.OrdinalIgnoreCase))
-                    ?? throw new FormatException("The exported .zip archive is missing the labels.txt file");
-
-                labelsEntry.ExtractToFile(labelsPath);
+                archive.ExtractAll(extractedPath, ExtractExistingFileAction.Throw) ;
             }
         }
     }

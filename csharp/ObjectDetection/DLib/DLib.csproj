@@ -1,14 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <PackageId>DLib</PackageId>
+    <Version>1.1.0</Version>
+    <Authors>haotruong95</Authors>
+    <Company>haotruong95</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="1.5.0" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.0" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.3.0" />
-    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.0" />
+    <PackageReference Include="DotNetZip" Version="1.15.0"/>
+    <PackageReference Include="Microsoft.ML" Version="1.5.5" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.5" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.7.1" />
+    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.5" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\DLib.XML</DocumentationFile>
+  </PropertyGroup>
 
 </Project>

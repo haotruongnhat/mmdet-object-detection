@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.ML;
 using DLib;
 
 namespace ObjectDetection
@@ -13,16 +12,40 @@ namespace ObjectDetection
     {
         public static void Main()
         {
-            // If there is one, use it.
-            var modelPath = "/home/mmdet-object-detection/model/det.zip";
-            Bitmap bitmap = new Bitmap("/home/vstech-data/COCO/lab/images/45.jpg");
+            string rootFolder = "path/to/assets/folder";
+            
+            //Path to model
+            var modelPath = Path.Combine(rootFolder, "model" , "det.zip");
 
-            // Load model
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //Initilize model
             var model = new DLModule(modelPath);
 
-            var boxes = model.Inspect(bitmap);
-            Bitmap overlay = model.DrawBoundingBox(bitmap, boxes, Color.Red);
-            overlay.Save("/home/mmdet-object-detection/output.jpeg");
+            Console.WriteLine("Load model: {0} ms", stopwatch.Elapsed.Milliseconds);
+
+            //Path to image
+            Bitmap bitmap1 = new Bitmap(Path.Combine(rootFolder, "images", "46.jpg"));
+            Bitmap bitmap2 = new Bitmap(Path.Combine(rootFolder, "images", "1.jpg"));
+            var bitmaps = new List<Bitmap>() {bitmap1, bitmap2};
+
+            stopwatch.Restart();
+
+            //Inspect images
+            List<List<BoundingBox>> boxes = model.Inspect(bitmaps);
+
+            //Execution time
+            Console.WriteLine("Run image: {0} ms", stopwatch.Elapsed.Milliseconds);
+
+            //Access boxes result from first image
+            boxes.ElementAt(0).ForEach(box => Console.WriteLine(box));
+
+            //Write bounding boxes on image
+            Bitmap overlay1 = model.DrawBoundingBox(bitmap1, boxes.ElementAt(0), Color.Red);
+            overlay1.Save(Path.Combine(rootFolder, "output1.jpg"));
+            Bitmap overlay2 = model.DrawBoundingBox(bitmap2, boxes.ElementAt(1), Color.Red);
+            overlay2.Save(Path.Combine(rootFolder, "output2.jpg"));
         }
     }
 }

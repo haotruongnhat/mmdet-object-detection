@@ -19,6 +19,13 @@ namespace DLib
             mlModel = SetupMlNetModel(Model);
         }
 
+        public IDataView BatchInference(IEnumerable<ImageInputData> inputs) {
+            var dataView = mlContext.Data.LoadFromEnumerable(inputs);
+            var outputs = mlModel.Transform(dataView);
+
+            return outputs;    
+        }
+
         private ITransformer SetupMlNetModel(IModel Model)
         {
             var dataView = mlContext.Data.LoadFromEnumerable(new List<ImageInputData>());
@@ -36,7 +43,9 @@ namespace DLib
                                                                     outputAsFloatArray: true))
                             .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: Model.ModelPath, 
                                                                         outputColumnNames: Model.ModelOutput, 
-                                                                        inputColumnNames: new[] { Model.ModelInput }));
+                                                                        inputColumnNames: new[] { Model.ModelInput },
+                                                                        gpuDeviceId: 0,
+                                                                        fallbackToCpu: true));
 
             var mlNetModel = pipeline.Fit(dataView);
 

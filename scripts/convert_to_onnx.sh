@@ -21,3 +21,4 @@ python /home/onnxruntime/tools/python/remove_initializer_from_input.py \
     --input ${OUTPUT_FILE} \
     --output ${OUTPUT_FILE}
 
+# zip -r det.zip . --password 50834B4DD468EB59781986643E1FAF7A053B97D69C8DDBE26ED4DC545872008F

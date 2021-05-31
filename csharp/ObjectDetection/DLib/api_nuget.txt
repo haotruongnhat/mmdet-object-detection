@@ -1,0 +1,3 @@
+oy2bjlr7pcyiakxyvz4qiucgj7wlz3qu5eydv7cbhl5doi
+
+dotnet nuget push bin/Release/DLib.1.0.0.nupkg -k oy2bjlr7pcyiakxyvz4qiucgj7wlz3qu5eydv7cbhl5doi -s https://api.nuget.org/v3/index.json

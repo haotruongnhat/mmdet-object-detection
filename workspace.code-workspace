@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "csharp/ObjectDetection"
+		},
+		{
+			"path": "../machinelearning-samples"
 		}
 	],
 	"settings": {}
