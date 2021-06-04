@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Diagnostics;
 using System.Drawing;
@@ -19,6 +19,8 @@ namespace ObjectDetection
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+
+            Console.WriteLine("Start loading model");
 
             //Initilize model
             var model = new DLModule(modelPath);

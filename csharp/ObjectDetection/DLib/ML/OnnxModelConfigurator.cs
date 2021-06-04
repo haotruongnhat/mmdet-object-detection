@@ -43,9 +43,7 @@ namespace DLib
                                                                     outputAsFloatArray: true))
                             .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: Model.ModelPath, 
                                                                         outputColumnNames: Model.ModelOutput, 
-                                                                        inputColumnNames: new[] { Model.ModelInput },
-                                                                        gpuDeviceId: 0,
-                                                                        fallbackToCpu: true));
+                                                                        inputColumnNames: new[] { Model.ModelInput }));
 
             var mlNetModel = pipeline.Fit(dataView);
 

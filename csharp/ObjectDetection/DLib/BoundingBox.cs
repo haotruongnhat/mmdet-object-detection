@@ -100,5 +100,10 @@ namespace DLib
             return string.Format("Bbox - Label: {0} X: {1}, Y: {2}, Width: {3}, Height: {4}, Score: {5}", 
                                 Label, Dimensions.X, Dimensions.Y, Dimensions.Width, Dimensions.Height, Confidence);   
         }
+        public string GetSimplifiedString()
+        {
+            return string.Format("label:{0},x:{1},y:{2},width:{3},height:{4},score:{5}", 
+                                Label, (int)Dimensions.X, (int)Dimensions.Y, (int)Dimensions.Width, (int)Dimensions.Height, Confidence);   
+        }
     }
 }
