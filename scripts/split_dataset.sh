@@ -1,0 +1,1 @@
+python cocosplit.py /home/lab/counting-steel-3.json  /home/lab/counting-steel-3 -s 0.8 --having-annotations

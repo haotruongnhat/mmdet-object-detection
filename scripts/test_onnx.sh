@@ -1,7 +1,7 @@
 source source_path.sh
 
 CONFIG_FILE=/home/vstech-data/COCO/lab/demthep_lab_faster_rcnn.py
-ONNX_FILE=/home/mmdet-object-detection/csharp/ObjectDetection-Onnx/OnnxObjectDetection/ML/OnnxModels/det_model/model.onnx
+ONNX_FILE=/home/vstech-data/COCO/lab/checkpoints/latest.onnx
 OUTPUT_FILE=/home/vstech-data/COCO/lab/checkpoints/result.pkl
 FORMAT_ONLY=False
 EVALUATION_METRICS=bbox
