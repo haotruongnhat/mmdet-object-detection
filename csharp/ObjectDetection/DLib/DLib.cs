@@ -41,6 +41,30 @@ namespace DLib
             return boxes;
         }
 
+        public string Inspect(List<Bitmap> images) {
+            // List<List<BoundingBox>> batchBoxes = Inspect(images);
+
+            // List<string> batchOutputString;
+            // foreach(var boxes in batchBoxes) {
+            //     List<string> outputString = boxes.Select(box => box.GetSimplifiedString());
+            //     string output = string.Join(";", outputString);
+            // }
+
+            // List<string> outputString = boxes.Select(box => box.GetSimplifiedString());
+
+            return output;
+        }
+
+        public string Inspect(Bitmap image1, Bitmap image2) {
+            List<Bitmap> images = new List<Bitmap>() {image1, image2};
+
+        }
+
+        public string Inspect(Bitmap image) {
+
+
+        }
+
         private List<List<BoundingBox>> Inspect_(IEnumerable<ImageInputData> inputs) {
             var outputs = modelConfigurator.BatchInference(inputs);
 
